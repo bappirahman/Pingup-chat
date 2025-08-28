@@ -2,10 +2,13 @@ import mongoose from "mongoose";
 
 const connectDB = async (mongoURI: string) => {
   try {
-    await mongoose.connect(mongoURI, {
+    const connection = await mongoose.connect(mongoURI, {
       dbName: process.env.DB_NAME || "pingup_chatapp",
     });
-    console.log("MongoDB connected");
+    if (connection) {
+      console.log("MongoDB connected");
+      return true;
+    }
   } catch (error) {
     console.error("MongoDB connection error:", error);
   }
