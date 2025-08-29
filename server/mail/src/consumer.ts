@@ -1,6 +1,6 @@
-import * as amqp from "amqplib";
-
-let channel: amqp.Channel;
+import nodemailer from "nodemailer";
+import "dotenv/config";
+import amqp from "amqplib";
 
 interface rabbitConfig {
   host: string;
@@ -9,7 +9,7 @@ interface rabbitConfig {
   password: string;
 }
 
-export const connectRabbitMQ = async (rabbitConfig: rabbitConfig) => {
+const startSendOtpConsumer = async (rabbitConfig: rabbitConfig) => {
   try {
     if (!rabbitConfig.host)
       throw new Error("RabbitMQ configuration error: 'host' is not defined.");
@@ -23,6 +23,7 @@ export const connectRabbitMQ = async (rabbitConfig: rabbitConfig) => {
       throw new Error(
         "RabbitMQ configuration error: 'password' is not defined."
       );
+
     const connection = await amqp.connect({
       protocol: "amqp",
       hostname: rabbitConfig.host,
@@ -30,36 +31,16 @@ export const connectRabbitMQ = async (rabbitConfig: rabbitConfig) => {
       username: rabbitConfig.username,
       password: rabbitConfig.password,
     });
-    channel = await connection.createChannel();
-    if (Object.keys(channel).length > 0) {
-      console.log("RabbitMQ is connected");
-      return true;
-    }
-  } catch (error) {
-    console.error("RabbitMQ connection error:", error);
-  }
-};
-
-export const publishToQueue = async (queueName: string, message: any) => {
-  if (!channel) {
-    throw new Error("Channel is not created");
-  }
-  try {
+    const channel = await connection.createChannel();
+    const queueName = "send_otp_queue";
     await channel.assertQueue(queueName, { durable: true });
-    channel.sendToQueue(queueName, Buffer.from(JSON.stringify(message)), {
-      persistent: true,
-    });
+    console.log(
+      `RabbitMQ consumer is listening for OTP emails on queue "${queueName}" at ${rabbitConfig.host}:${rabbitConfig.port}`
+    );
   } catch (error) {
     console.error(
-      `Error while asserting and sending to queue '${queueName}' with message:`,
-      message
+      "Failed to start mail OTP consumer:",
+      error instanceof Error ? error.message : error
     );
-    if (error instanceof Error) {
-      console.error("Error details:", error.message, error.stack);
-    } else {
-      console.error("Unknown error:", error);
-    }
   }
 };
-
-export default connectRabbitMQ;
