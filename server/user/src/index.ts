@@ -1,5 +1,6 @@
-import express from "express";
+import express, { type Request, type Response } from "express";
 import "dotenv/config";
+import cors from "cors";
 
 import redisConnect from "./config/redis.js";
 import userRouter from "./routes/user.js";
@@ -9,22 +10,26 @@ import connectRabbitMQ from "./config/rabbitMQ.js";
 const PORT = process.env.PORT || 3000;
 
 const app = express();
+app.use(express.json());
+app.use(cors());
 
-app.use("/api/user", userRouter);
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
+app.use("/api/user/", userRouter);
 
 try {
   const mongoConnected = await connectDB(process.env.MONGO_URI!);
-  const redisConnected = await redisConnect(process.env.REDIS_URL!);
+  const redisClient = await redisConnect(process.env.REDIS_URL!);
   const RabbitMQConnected = await connectRabbitMQ({
     host: process.env.RABBITMQ_HOST!,
     port: process.env.RABBITMQ_PORT!,
     username: process.env.RABBITMQ_USERNAME!,
     password: process.env.RABBITMQ_PASSWORD!,
   });
-  if (mongoConnected && redisConnected && RabbitMQConnected) {
+  if (
+    mongoConnected &&
+    redisClient &&
+    Object.keys(redisClient).length > 0 &&
+    RabbitMQConnected
+  ) {
     app.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);
     });
