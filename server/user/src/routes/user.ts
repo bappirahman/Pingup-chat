@@ -16,6 +16,6 @@ userRouter.post("/verify", verifyUser);
 userRouter.get("/my-profile", isAuth, myProfile);
 userRouter.get("/all", isAuth, getAllUser);
 userRouter.post("/update/user", isAuth, updateName);
-userRouter.get("/:id", getAUser);
+userRouter.get("/user/:id", getAUser);
 
 export default userRouter;

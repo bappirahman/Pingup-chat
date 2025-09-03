@@ -13,7 +13,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-app.use("/api/user/", userRouter);
+app.use("/api/v1/", userRouter);
 
 try {
   const mongoConnected = await connectDB(process.env.MONGO_URI!);

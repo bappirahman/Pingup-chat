@@ -12,7 +12,7 @@ export interface IChat extends Document {
 
 const ChatSchema: Schema = new Schema(
   {
-    user: [
+    users: [
       {
         type: String,
         required: true,
