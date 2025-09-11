@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { AppProvider } from "@/context/AppContext";
+import { Toaster } from "react-hot-toast";
 
 export const metadata: Metadata = {
   title: "PingUp Chat",
@@ -14,7 +16,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className="bg-gray-900">
+        <AppProvider>
+          {children}
+          <Toaster />
+        </AppProvider>
+      </body>
     </html>
   );
 }

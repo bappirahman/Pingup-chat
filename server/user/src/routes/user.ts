@@ -14,7 +14,7 @@ const userRouter: Router = Router();
 userRouter.post("/login", loginUser);
 userRouter.post("/verify", verifyUser);
 userRouter.get("/my-profile", isAuth, myProfile);
-userRouter.get("/all", isAuth, getAllUser);
+userRouter.get("/user/all", isAuth, getAllUser);
 userRouter.post("/update/user", isAuth, updateName);
 userRouter.get("/user/:id", getAUser);
 

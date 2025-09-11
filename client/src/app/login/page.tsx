@@ -1,11 +1,15 @@
 "use client";
-import { USER_BASE_URL } from "@/lib/apiEndPoints";
+import { useAppData } from "@/context/AppContext";
+import { USER_LOGIN } from "@/lib/apiEndPoints";
 import axios from "axios";
 import { ArrowRight, Loader, Mail } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { useState } from "react";
+import Loading from "@/components/Loading";
+import toast from "react-hot-toast";
 
 const LoginPage = () => {
+  const { isAuth, loading: userLoading } = useAppData();
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -16,18 +20,21 @@ const LoginPage = () => {
     e.preventDefault();
     setLoading(true);
 
-    const { data } = await axios.post(`${USER_BASE_URL}/api/v1/login`, {
-      email,
-    });
-    alert(data.message);
-    router.push(`/verify?email=${email}`);
     try {
+      const { data } = await axios.post(USER_LOGIN, {
+        email,
+      });
+      toast.success(data.message);
+      router.push(`/verify?email=${email}`);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      alert(error.response.data.message);
+      toast.error(error.response.data.message);
     } finally {
       setLoading(false);
     }
   };
+  if (userLoading) return <Loading />;
+  if (isAuth) return redirect("/");
   return (
     <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
       <div className="max-w-md w-full">

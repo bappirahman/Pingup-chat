@@ -5,6 +5,7 @@ import { publishToQueue } from "../config/rabbitMQ.js";
 import User from "../model/User.js";
 import generateToken from "../config/generateToken.js";
 import type { AuthenticatedRequest } from "../middleware/isAuth.js";
+import mongoose from "mongoose";
 
 export const loginUser: RequestHandler = tryCatch(
   async (req: Request, res: Response) => {
@@ -38,8 +39,7 @@ export const loginUser: RequestHandler = tryCatch(
     await publishToQueue("send_otp_queue", message);
     res.status(200).json({
       success: true,
-      message:
-        "A one-time password (OTP) has been sent to your email address. Please check your inbox and follow the instructions to continue.",
+      message: "OTP sent to your email.",
       email,
       expiresIn: 300, // seconds
     });
@@ -99,6 +99,7 @@ export const updateName = tryCatch(
 export const getAllUser = tryCatch(
   async (req: AuthenticatedRequest, res: Response) => {
     const users = await User.find();
+
     res.status(200).json({
       users,
     });
@@ -107,7 +108,9 @@ export const getAllUser = tryCatch(
 
 export const getAUser = tryCatch(
   async (req: AuthenticatedRequest, res: Response) => {
-    const user = await User.findById(req.params.id);
+    const { id } = req.params;
+
+    const user = await User.findById(id);
     if (!user) {
       return res.status(404).json({
         message: "User not found",

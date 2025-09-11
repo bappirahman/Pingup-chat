@@ -67,7 +67,7 @@ export const getAllChats = tryCatch(
             throw new Error("Failed to fetch other user data");
           }
           return {
-            user: data,
+            user: data.user,
             chat: {
               ...chat.toObject(),
               latestMessage: chat.latestMessage || null,
