@@ -3,7 +3,7 @@ import { useAppData } from "@/context/AppContext";
 import { USER_LOGIN } from "@/lib/apiEndPoints";
 import axios from "axios";
 import { ArrowRight, Loader, Mail } from "lucide-react";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Loading from "@/components/Loading";
 import toast from "react-hot-toast";
@@ -34,7 +34,7 @@ const LoginPage = () => {
     }
   };
   if (userLoading) return <Loading />;
-  if (isAuth) return redirect("/");
+  if (isAuth) return router.push("/");
   return (
     <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
       <div className="max-w-md w-full">

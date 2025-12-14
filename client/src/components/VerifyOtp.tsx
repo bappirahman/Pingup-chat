@@ -2,7 +2,7 @@
 
 import axios from "axios";
 import { ArrowRight, ChevronLeft, Loader, Lock } from "lucide-react";
-import { redirect, useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { USER_LOGIN, USER_VERIFY } from "@/lib/apiEndPoints";
 import { useAppData } from "@/context/AppContext";
@@ -99,7 +99,7 @@ const VerifyOtp = () => {
       setIsAuth(true);
       fetchChats();
       fetchUsers();
-      redirect("/chat");
+      router.push("/chat");
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       setError(error.response.data.message);
@@ -124,7 +124,7 @@ const VerifyOtp = () => {
     }
   };
   if (userLoading) return <Loading />;
-  if (isAuth) return redirect("/");
+  if (isAuth) return router.push("/");
   return (
     <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
       <div className="max-w-md w-full">

@@ -7,3 +7,5 @@ export const USER_VERIFY = `${USER_BASE_URL}/api/v1/verify`;
 export const USER_ALL_URL = `${USER_BASE_URL}/api/v1/user/all`;
 export const CHAT_BASE_URL = Env.CHAT_SERVICE_URL;
 export const CHAT_ALL_URL = `${CHAT_BASE_URL}/api/v1/chat/all`;
+export const CHAT_CREATE_NEW = `${CHAT_BASE_URL}/api/v1/chat/new`;
+export const CHAT_MESSAGE_URL = `${CHAT_BASE_URL}/api/v1/message`;

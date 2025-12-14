@@ -256,7 +256,7 @@ export const getMessagesByChat = tryCatch(
       // TODO: socket
       res.json({
         messages,
-        user: data,
+        user: data.user,
       });
     } catch (error) {
       if (error instanceof Error) {
